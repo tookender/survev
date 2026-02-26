@@ -1,82 +1,21 @@
-# Open sourced surviv.io
-Survev.io is an open source recreation of a hit web game "surviv.io" that has been permanently shut down.
+# survev with easy port forwarding
+this is probably vulnerable to some attacks cause ur opening up ports on ur router
 
-Our goal is to immortalize it by getting the recreation as close as possible to the last canonical version of the game.
+## port forwarding
+go to ur router and open the following ports:
+- 3000: HTTP TCP port over IPv4
+- 8001: TCP port over IPv4
+- 8000: TCP port over IPv4
 
-We do not consider any updates after the Kongregate acquisition canonical, so those will not be a part of the project.
+## running
+well first `pnpm install` but ur smart enough to do that
+open 2 terminal windows, run the following in each:
+- `pnpm dev:server`
+- `pnpm dev:client`
 
-## Running locally
+## using
+google whats my ip or go [here](https://whatismyipaddress.com/)
+then copy that and add :3000 at the end, and you can use this to play with friends
 
-start client development server with `pnpm dev:client`
 
-and server with `pnpm dev:server`
-
-or cd into server and client directories and run `pnpm dev` for each
-
-### Additional steps for accounts
-Accounts are optional, set `accountsEnabled` to false in config.ts to disable them. 
-If disabled, you can skip the steps below.
-
-First generate a private key and set encryptLoadoutSecret to it, this is used to encrypt loadouts.
-```sh
-openssl rand -base64 10
-```
- 
-After that, you need to create and populate the PostgreSQL database and apply the database schema.
-
-After [installing PostgreSQL](https://www.postgresql.org/download/), start the service and create a database:
-
-```bash
-sudo -u postgres initdb --locale=C.UTF-8 --encoding=UTF8 -D /var/lib/postgres/data --data-checksums
-
-systemctl enable --now postgresql.service
-
-sudo -u postgres createuser survev
-sudo -u postgres createdb survev -O survev
-```
-
-Then populate the database with the schema:
-
-```bash
-
- cd server
- 
- # run this everytime you make changes to the schema.ts
- pnpm run db:generate
- pnpm run db:migrate
-
- # start the server
- pnpm run dev
- # or
- # pnpm run dev:api
- # pnpm run dev:game
-```
-
-to interact with the database through an interface
-```bash
- pnpm run db:studio 
-```
-
-to wipe the db and start over run, useful when messing up things
-DO NOT RUN THIS IN PRODUCTION
-```bash
- # set database permissions
- sudo -u postgres psql -c "ALTER USER survev WITH PASSWORD 'survev';"
- pnpm run db:wipe
-```
-
-### Additional steps for caching
-Caching is disabled by default, set cachingEnabled to true in config.ts to enable it.
-
-First install redis:
-```sh
-sudo apt install redis-server
-```
-
-Ensure Redis starts on boot and is running:
-```sh
-systemctl enable --now redis-server
-```
-
-## Production builds
-See [HOSTING.md](./HOSTING.md)
+no additional setup is required, just run the commands above and you should be good to go
