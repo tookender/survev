@@ -8,7 +8,8 @@ go to ur router and open the following ports:
 - 8000: TCP port over IPv4
 
 ## running
-well first `pnpm install` but ur smart enough to do that
+well first `pnpm install` but ur smart enough to do that.
+
 open 2 terminal windows, run the following in each:
 - `pnpm dev:server`
 - `pnpm dev:client`
