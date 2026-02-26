@@ -23,7 +23,7 @@ export function getConfig(isProduction: boolean, dir: string) {
             thisRegion: "local",
         },
         vite: {
-            host: "127.0.0.1",
+            host: "0.0.0.0",
             port: 3000,
         },
         regions: {},
@@ -155,7 +155,7 @@ export function getConfig(isProduction: boolean, dir: string) {
     if (isDev) {
         config.regions.local ??= {
             https: false,
-            address: `127.0.0.1:${config.gameServer.port}`,
+            address: `0.0.0.0:${config.gameServer.port}`,
             l10n: "index-local",
         };
     }

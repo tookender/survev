@@ -133,6 +133,23 @@ export class Application {
         this.loadBrowserDeps(onLoadComplete);
     }
 
+    resolveConnectHost(hostWithPort: string) {
+        try {
+            const parsed = new URL(`http://${hostWithPort}`);
+            if (
+                parsed.hostname === "0.0.0.0" ||
+                parsed.hostname === "::" ||
+                parsed.hostname === "[::]"
+            ) {
+                parsed.hostname = window.location.hostname;
+                return parsed.host;
+            }
+        } catch {
+            // Keep the original value if parsing fails.
+        }
+        return hostWithPort;
+    }
+
     async loadBrowserDeps(onLoadCompleteCb: () => void) {
         await SDK.init(this);
         onLoadCompleteCb();
@@ -775,8 +792,9 @@ export class Application {
         const hosts = matchData.hosts || [];
         const urls: string[] = [];
         for (let i = 0; i < hosts.length; i++) {
+            const host = this.resolveConnectHost(hosts[i]);
             urls.push(
-                `ws${matchData.useHttps ? "s" : ""}://${hosts[i]}/play?gameId=${
+                `ws${matchData.useHttps ? "s" : ""}://${host}/play?gameId=${
                     matchData.gameId
                 }`,
             );

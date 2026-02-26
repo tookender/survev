@@ -5,6 +5,23 @@ declare const PING_TEST_URLS: Array<{
     https: boolean;
 }>;
 
+function resolveConnectHost(hostWithPort: string) {
+    try {
+        const parsed = new URL(`http://${hostWithPort}`);
+        if (
+            parsed.hostname === "0.0.0.0" ||
+            parsed.hostname === "::" ||
+            parsed.hostname === "[::]"
+        ) {
+            parsed.hostname = window.location.hostname;
+            return parsed.host;
+        }
+    } catch {
+        // Keep the original value if parsing fails.
+    }
+    return hostWithPort;
+}
+
 export class PingTest {
     ptcDataBuf = new ArrayBuffer(1);
     tests = PING_TEST_URLS.map((config) => {
@@ -74,7 +91,8 @@ export class PingTest {
                 continue;
             }
             if (!test.ws) {
-                const ws = new WebSocket(`ws${test.https ? "s" : ""}://${test.url}/ptc`);
+                const host = resolveConnectHost(test.url);
+                const ws = new WebSocket(`ws${test.https ? "s" : ""}://${host}/ptc`);
                 ws.binaryType = "arraybuffer";
                 ws.onopen = function () {};
                 ws.onmessage = function (_msg) {
